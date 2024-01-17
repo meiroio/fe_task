@@ -1,17 +1,17 @@
-"use client";
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+'use client';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 const LocalStorageCleaner: React.FC = () => {
-  const pathname = usePathname();
+	const pathname = usePathname();
 
-  useEffect(() => {
-    if (!pathname.startsWith("/attributes")) {
-      localStorage.removeItem("searchedText");
-    }
-  }, [pathname]);
+	useEffect(() => {
+		if (!pathname.startsWith('/attributes')) {
+			localStorage.removeItem('searchedText');
+		}
+	}, [pathname]);
 
-  return null;
+	return null;
 };
 
 export default LocalStorageCleaner;

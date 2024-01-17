@@ -1,11 +1,8 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { AttributesLayoutProps } from './AttributesLayoute';
-import {
-	Attribute,
-	AttributeFetchResponse,
-	AttributesFetchResponse,
-} from './AttributesLayoute.types';
+import { Attribute, AttributesFetchResponse } from './AttributesLayoute.types';
 import {
 	AiOutlineEdit,
 	AiOutlineEye,
@@ -19,7 +16,10 @@ import useApi from '@/app/_api/api';
 const useAttributesLayouteModel = (): AttributesLayoutProps => {
 	const [attributes, setAttributes] = useState<Attribute[]>([]);
 	const [searchedText, setSearchedText] = useState(() => {
-		return localStorage.getItem('searchedText') || '';
+		if (typeof window !== 'undefined') {
+			return localStorage.getItem('searchedText') || '';
+		}
+		return '';
 	});
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [isSortingByName, setIsSortingByName] = useState(true);
