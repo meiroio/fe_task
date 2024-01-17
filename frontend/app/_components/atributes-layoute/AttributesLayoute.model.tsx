@@ -94,7 +94,6 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
 		setAttributes(attributesData?.pages.flatMap((page) => page.data) || []);
 	}, [attributesData]);
 
-	// Handle scrolling to fetch more items
 	const handleScroll = () => {
 		if (!haveIReachedTheEndOfWebsite()) {
 			return;

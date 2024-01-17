@@ -1,61 +1,67 @@
-import { AttributeFetchResponse } from "../_components/atributes-layoute/AttributesLayoute.types";
-import { fetchAttributProps } from "./api.types";
+import {
+	Attribute,
+	AttributeFetchResponse,
+} from '../_components/atributes-layoute/AttributesLayoute.types';
+import { DeleteAttributeResponse, fetchAttributProps } from './api.types';
 
-const API_BASE_URL = "http://localhost:3000"; // Replace with your actual API base URL
+const API_BASE_URL = 'http://localhost:3000';
 
 interface useApiEndpoints {
-  deleteAttribute: (id: string) => Promise<any>;
-  fetchLabels: (offset: number) => Promise<any>;
-  fetchAttribut: (id: string) => Promise<any>;
-  fetchAttributes: (
-    props: fetchAttributProps
-  ) => Promise<AttributeFetchResponse>;
+	deleteAttribute: (id: string) => Promise<DeleteAttributeResponse>;
+	fetchLabels: (offset: number) => Promise<any>;
+	fetchAttribut: (id: string) => Promise<any>;
+	fetchAttributes: (
+		props: fetchAttributProps
+	) => Promise<AttributeFetchResponse>;
 }
 
 const useApi = (): useApiEndpoints => {
-  const deleteAttribute = async (id: string) => {
-    const response = await fetch(`${API_BASE_URL}/attributes/${id}`, {
-      method: "DELETE",
-    });
+	const deleteAttribute = async (
+		id: string
+	): Promise<DeleteAttributeResponse> => {
+		const response = await fetch(`${API_BASE_URL}/attributes/${id}`, {
+			method: 'DELETE',
+		});
 
-    if (!response.ok) {
-      throw new Error("Failed to delete attribute");
-    }
+		if (!response.ok) {
+			console.error('Failed to delete attribute', response);
+			return { isSuccessful: false, error: response.statusText };
+		}
 
-    const data = await response.json();
-    return data;
-  };
+		const data: Attribute = await response.json();
+		return { isSuccessful: true, data };
+	};
 
-  const fetchLabels = async (offset: number = 0) => {
-    const response = await fetch(`${API_BASE_URL}/labels?offset=${offset}`);
-    const parsedLabelsResponse = await response.json();
-    return parsedLabelsResponse;
-  };
+	const fetchLabels = async (offset: number = 0) => {
+		const response = await fetch(`${API_BASE_URL}/labels?offset=${offset}`);
+		const parsedLabelsResponse = await response.json();
+		return parsedLabelsResponse;
+	};
 
-  const fetchAttribut = async (id: string) => {
-    const response = await fetch(`${API_BASE_URL}/attributes/${id}`);
-    const parsedAttributeResponse = await response.json();
-    return parsedAttributeResponse;
-  };
+	const fetchAttribut = async (id: string) => {
+		const response = await fetch(`${API_BASE_URL}/attributes/${id}`);
+		const parsedAttributeResponse = await response.json();
+		return parsedAttributeResponse;
+	};
 
-  const fetchAttributes = async ({
-    pageParam,
-    searchedText,
-    sortBy = "name",
-    sortDir = "asc",
-  }: fetchAttributProps) => {
-    const response = await fetch(
-      `http://127.0.0.1:3000/attributes?offset=${pageParam}&limit=10&searchText=${searchedText}&sortBy=${sortBy}&sortDir=${sortDir}`
-    );
-    return await response.json();
-  };
+	const fetchAttributes = async ({
+		pageParam,
+		searchedText,
+		sortBy = 'name',
+		sortDir = 'asc',
+	}: fetchAttributProps) => {
+		const response = await fetch(
+			`http://127.0.0.1:3000/attributes?offset=${pageParam}&limit=10&searchText=${searchedText}&sortBy=${sortBy}&sortDir=${sortDir}`
+		);
+		return await response.json();
+	};
 
-  return {
-    deleteAttribute,
-    fetchLabels,
-    fetchAttributes,
-    fetchAttribut,
-  };
+	return {
+		deleteAttribute,
+		fetchLabels,
+		fetchAttributes,
+		fetchAttribut,
+	};
 };
 
 export default useApi;
