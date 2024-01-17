@@ -4,10 +4,9 @@ import { usePathname } from 'next/navigation';
 interface SidebarLinkProps {
 	href: string;
 	text: string;
-	key: number;
 }
 
-const SidebarLink = ({ href, text, key }: SidebarLinkProps) => {
+const SidebarLink = ({ href, text }: SidebarLinkProps) => {
 	const pathname = usePathname();
 
 	const myHref = href !== '/' ? href : '/home';
@@ -16,7 +15,6 @@ const SidebarLink = ({ href, text, key }: SidebarLinkProps) => {
 	const isActive = myPathname.includes(myHref);
 	return (
 		<Link
-			key={'sidebar-link-' + key}
 			className={`
       group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all hover:bg-orange-100
       ${!isActive ? 'bg-transparent' : 'bg-orange-200 '}

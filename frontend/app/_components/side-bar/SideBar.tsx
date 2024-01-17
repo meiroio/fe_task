@@ -20,9 +20,9 @@ const SideBar: React.FC = () => {
 		>
 			{NavigationLinks.map((link, index) => (
 				<SidebarLink
+					key={'sidebar-link-' + index}
 					href={link.path}
 					text={link.name}
-					key={'sidebar-navigation-item-' + index}
 				/>
 			))}
 		</nav>

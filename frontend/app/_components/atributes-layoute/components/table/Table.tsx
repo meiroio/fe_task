@@ -13,6 +13,7 @@ interface TableProps {
 
 interface Header {
 	name: string;
+	displayName: string;
 	sortable: boolean;
 	isDefault?: boolean;
 	onToggle?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,13 +27,15 @@ const Table: React.FC<TableProps> = ({ data, toolbarTools, refetch }) => {
 	let heads: Header[] = [
 		{
 			name: 'Name',
+			displayName: 'Name',
 			sortable: true,
 			isDefault: sortByTool?.isDefault,
 			onToggle: sortByTool?.toggleOptions,
 		},
-		{ name: 'Labels', sortable: false },
+		{ name: 'Labels', displayName: 'Labels', sortable: false },
 		{
 			name: 'CreatedAt',
+			displayName: 'Created',
 			sortable: true,
 			isDefault: sortTool?.isDefault,
 			onToggle: sortTool?.toggleOptions,
@@ -40,7 +43,10 @@ const Table: React.FC<TableProps> = ({ data, toolbarTools, refetch }) => {
 	];
 
 	if (editTool?.isDefault) {
-		heads = [...heads, { name: 'Actions', sortable: false }];
+		heads = [
+			...heads,
+			{ name: 'Actions', displayName: 'Actions', sortable: false },
+		];
 	}
 
 	const handleHeaderClick = (header: Header) => {
@@ -102,7 +108,7 @@ const Table: React.FC<TableProps> = ({ data, toolbarTools, refetch }) => {
 										onClick={() => handleHeaderClick(header)}
 									>
 										<section className="flex flex-row ">
-											{header.name}
+											{header.displayName}
 											{shouldTheSortIconBePlaced(header)}
 										</section>
 									</th>

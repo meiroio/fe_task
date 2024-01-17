@@ -1,12 +1,11 @@
 'use client';
 import useApi from '@/app/_api/api';
 import { Attribute } from '@/app/_components/atributes-layoute/AttributesLayoute.types';
-import AttributeRow from '@/app/_components/atributes-layoute/components/table/components/attribute-row/AttributeRow';
+import AttributeTable from '@/app/_components/attribute-layoute/attribute-table/AttributeTabel';
 import { useModal } from '@/app/_contexts/modal-context/ModalContext';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineLeft, AiFillDelete } from 'react-icons/ai';
-import { MdErrorOutline } from 'react-icons/md';
 
 const DetailScreen: React.FC = () => {
 	const [attribute, setAttribute] = useState<Attribute>();
@@ -62,40 +61,16 @@ const DetailScreen: React.FC = () => {
 							}}
 						/>
 					</div>
-					<div className="flex flex-col gap-8  w-[60vw] self-center">
-						<table className="min-w-full divide-y divide-gray-200">
-							<thead className="bg-gray-50">
-								<tr>
-									{['Name', 'Name', 'Created'].map((header, idx) => (
-										<th
-											key={idx}
-											scope="col"
-											className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-										>
-											{header}
-										</th>
-									))}
-								</tr>
-							</thead>
-							{attribute ? (
-								<tbody className="bg-white divide-y divide-gray-200">
-									<AttributeRow
-										attribute={attribute}
-										isEditMode={false}
-										key={`attribute-${attribute.id}`}
-									/>
-								</tbody>
-							) : (
-								<></>
-							)}
-						</table>
+					<section className="flex flex-col gap-8  w-[60vw] self-center">
+						<AttributeTable attribute={attribute} />
+
 						<button
 							onClick={() => handleDeleteAttribute(id)}
 							className="bg-red-600 text-white px-4 py-2 rounded-md w-fit"
 						>
 							Delete
 						</button>
-					</div>
+					</section>
 				</>
 			) : (
 				<h3 className="self-center pt-24 text-center">Loading attribute...</h3>
