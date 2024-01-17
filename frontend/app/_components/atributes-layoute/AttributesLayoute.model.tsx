@@ -110,7 +110,7 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
 
 	useEffect(() => {
 		refetch();
-	}, [searchedText, isSortingByName, isAscending]);
+	}, [searchedText, isSortingByName, isAscending, refetch]);
 
 	useEffect(() => {
 		window.addEventListener('scroll', handleScroll);
@@ -118,7 +118,7 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 		};
-	}, []);
+	});
 
 	return {
 		attributes,

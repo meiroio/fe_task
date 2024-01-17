@@ -32,7 +32,7 @@ const DetailScreen: React.FC = () => {
 		};
 
 		initialFetch();
-	}, []);
+	});
 
 	const handleDeleteAttribute = (attributeId: string) => {
 		openModal({
@@ -48,9 +48,9 @@ const DetailScreen: React.FC = () => {
 	};
 
 	return (
-		<main className=" self-center  gap-12 flex min-h-screen flex-col items-top w-[80vw] bg-gray-100 ">
-			{isUnknownAttribute ? (
-				<h1 className="text-4xl pt-24 font-bold text-center">{`Attribute ID ${id}`}</h1>
+		<main className="self-center  gap-12 flex min-h-screen flex-col items-top w-[80vw] bg-gray-100 ">
+			{isUnknownAttribute && !attribute ? (
+				<h1 className="text-4xl pt-24 font-bold text-center">{`No atribute with ID ${id}`}</h1>
 			) : attribute ? (
 				<>
 					<h1 className="text-4xl pt-24 font-bold text-center">{`Attribute ID ${id}`}</h1>
@@ -98,7 +98,7 @@ const DetailScreen: React.FC = () => {
 					</div>
 				</>
 			) : (
-				<h3>Loading attribute...</h3>
+				<h3 className="self-center pt-24 text-center">Loading attribute...</h3>
 			)}
 		</main>
 	);

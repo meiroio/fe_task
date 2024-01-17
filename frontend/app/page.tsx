@@ -13,7 +13,7 @@ export default function Home() {
 			<section className="flex flex-col justify-center gap-6 self-center w-[40vw]">
 				<p className="text-base text-center">
 					I was not sure what do to with the homepage. Originally I wanted to do
-					something "funny" with it, but I decided to use it for {''}
+					something funny with it, but I decided to use it for {''}
 					<b> 🌈 SELF PROMOTION 🌈</b>.
 				</p>
 

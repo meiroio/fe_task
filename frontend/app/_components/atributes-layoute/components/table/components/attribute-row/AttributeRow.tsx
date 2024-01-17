@@ -33,7 +33,7 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
 			confirmText: 'Ok',
 			icon: <AiFillCheckCircle className="w-10 h-10 text-green-600" />,
 			onConfirm: async () => {
-				refetch ?? (await refetch!());
+				await refetch!();
 			},
 		};
 

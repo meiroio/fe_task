@@ -34,7 +34,7 @@ export const LabelsProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		handleFetchLabels();
-	}, []);
+	});
 
 	return (
 		<LabelsContext.Provider value={{ labels: labels }}>
