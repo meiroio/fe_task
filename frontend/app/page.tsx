@@ -23,6 +23,7 @@ export default function Home() {
 
 				<Link
 					href={'https://adamzachoval.cz'}
+					target="_blank"
 					className="text-orange-500 font-bold w-fit  self-center bg-orange underline"
 				>
 					Adam Zachoval
