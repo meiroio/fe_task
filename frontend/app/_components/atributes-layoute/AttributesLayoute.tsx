@@ -47,6 +47,7 @@ const AttributesLayoute: React.FC = () => {
       <section className="flex flex-col  w-[60vw] self-center">
         <Toolbar toolbarTools={toolbarTools} />
         <Table
+          toolbarTools={toolbarTools}
           data={attributes}
           isEditMode={toolbarTools[2].isDefault}
           refetch={refetch}

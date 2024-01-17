@@ -35,18 +35,21 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
 
   const toolbarTools: ToolbarItemProps[] = [
     {
+      name: "Sort",
       isDefault: isAscending,
       toggleOptions: setIsAscending,
-      DefaultIcon: AiOutlineSortAscending,
-      SecondaryIcon: AiOutlineSortDescending,
+      DefaultIcon: AiOutlineSortDescending,
+      SecondaryIcon: AiOutlineSortAscending,
     },
     {
+      name: "Sort By",
       isDefault: isSortingByName,
       toggleOptions: setIsSortingByName,
-      DefaultIcon: BsAlphabet,
-      SecondaryIcon: BsFillCalendarDateFill,
+      DefaultIcon: BsFillCalendarDateFill,
+      SecondaryIcon: BsAlphabet,
     },
     {
+      name: "Edit",
       isDefault: isEditMode,
       toggleOptions: setIsEditMode,
       DefaultIcon: AiOutlineEdit,

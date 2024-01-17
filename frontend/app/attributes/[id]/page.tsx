@@ -2,7 +2,7 @@
 import useApi from "@/app/_api/api";
 import { Attribute } from "@/app/_components/atributes-layoute/AttributesLayoute.types";
 import AttributeRow from "@/app/_components/atributes-layoute/components/table/components/attribute-row/AttributeRow";
-import { useModal } from "@/app/_components/modals/useModal";
+import { useModal } from "@/app/_contexts/modal-context/ModalContext";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { AiOutlineLeft, AiFillDelete } from "react-icons/ai";

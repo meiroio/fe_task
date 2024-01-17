@@ -1,6 +1,6 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ModalProvider } from "../_components/modals/useModal";
+import { ModalProvider } from "../_contexts/modal-context/ModalContext";
 import { LabelsProvider } from "../_contexts/labels-context/LabelsContext";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

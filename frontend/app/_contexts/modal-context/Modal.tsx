@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { ModalProps } from "./useModal";
+import { ModalProps } from "./ModalContext";
 
 interface ModalViewProps {
   isOpen: boolean;

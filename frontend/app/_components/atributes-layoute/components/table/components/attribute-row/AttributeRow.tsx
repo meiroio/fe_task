@@ -3,7 +3,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { Attribute, Label } from "../../../../AttributesLayoute.types";
 import LabelPin from "../label-pin/LabelPin";
 import useApi from "@/app/_api/api";
-import { useModal } from "@/app/_components/modals/useModal";
+import { useModal } from "@/app/_contexts/modal-context/ModalContext";
 import { useRouter } from "next/navigation";
 import { useLabels } from "@/app/_contexts/labels-context/LabelsContext";
 
