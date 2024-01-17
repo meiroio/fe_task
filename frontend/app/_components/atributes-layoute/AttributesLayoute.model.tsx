@@ -14,8 +14,9 @@ import { ToolbarItemProps } from "./components/toolbar/toolbar-item/ToolbarItem"
 
 const useAttributesLayouteModel = (): AttributesLayoutProps => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
-  const [searchedText, setSearchedText] = useState("");
-
+  const [searchedText, setSearchedText] = useState(() => {
+    return localStorage.getItem("searchedText") || "";
+  });
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSortingByName, setIsSortingByName] = useState(true);
   const [isAscending, setIsAscending] = useState(true);
@@ -84,6 +85,10 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
         lastPage.hasNextPage ? lastPage.nextPage : undefined,
     }
   );
+
+  useEffect(() => {
+    localStorage.setItem("searchedText", searchedText);
+  }, [searchedText]);
 
   useEffect(() => {
     setAttributes(attributesData?.pages.flatMap((page) => page.data) || []);

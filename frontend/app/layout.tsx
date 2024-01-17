@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import SideBar from "./_components/side-bar/SideBar";
-import Modal from "./_contexts/modal-context/Modal";
+import LocalStorageCleaner from "./_utils/local-storage-cleaner/LocalStorageCleaner";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} flex bg-gray-200`}>
+        <LocalStorageCleaner />
         <SideBar />
         {children}
       </body>
