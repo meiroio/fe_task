@@ -8,7 +8,6 @@ import Toolbar from "./components/toolbar/Toolbar";
 
 export interface AttributesLayoutProps {
   attributes: Attribute[];
-  labels: Label[];
   searchedText: string;
   setSearchedText: Dispatch<SetStateAction<string>>;
   fetchNextPage: () => Promise<any>;
@@ -16,12 +15,12 @@ export interface AttributesLayoutProps {
   hasNextPage: boolean;
   isEditMode: boolean;
   setIsEditMode: Dispatch<SetStateAction<boolean>>;
+  refetch: () => Promise<any>;
 }
 
 const AttributesLayoute: React.FC = () => {
   const {
     attributes,
-    labels,
 
     searchedText,
     setSearchedText,
@@ -33,22 +32,22 @@ const AttributesLayoute: React.FC = () => {
 
     isEditMode,
     setIsEditMode,
+
+    refetch,
   } = useAttributesLayouteModel();
 
   return (
     <>
       <h1 className="text-4xl pt-24 font-bold text-center">Attributes</h1>
 
-      <section className="">
-        <SearchBar
-          searchedText={searchedText}
-          setSearchedText={setSearchedText}
-        />
-      </section>
+      <SearchBar
+        searchedText={searchedText}
+        setSearchedText={setSearchedText}
+      />
 
       <section className="flex flex-col  w-[60vw] self-center">
         <Toolbar isEditMode={isEditMode} setIsEditMode={setIsEditMode} />
-        <Table data={attributes} labels={labels} isEditMode={isEditMode} />
+        <Table data={attributes} isEditMode={isEditMode} refetch={refetch} />
         <button
           className={`bg-translarent ${
             hasNextPage ? " cursor-pointer" : "cursor-default"

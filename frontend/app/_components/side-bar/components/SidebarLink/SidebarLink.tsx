@@ -7,8 +7,12 @@ interface SidebarLinkProps {
 }
 
 const SidebarLink = ({ href, text }: SidebarLinkProps) => {
-  const isActive = usePathname() === href;
+  const pathname = usePathname();
 
+  const myHref = href !== "/" ? href : "/home";
+  const myPathname = pathname !== "/" ? pathname : "/home";
+
+  const isActive = myPathname.includes(myHref);
   return (
     <Link
       className={`

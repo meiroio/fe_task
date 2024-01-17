@@ -17,7 +17,7 @@ const SideBar: React.FC = () => {
   return (
     <nav
       aria-label="Sidebar"
-      className="sticky top-0 w-[20vw] bg-gray-200 min-h-screen max-h-screen p-4 flex flex-col justify-center gap-4 rounded-s-xl"
+      className="sticky top-0 w-[20vw] bg-gray-200 min-h-screen max-h-screen p-4 flex flex-col justify-center gap-4"
     >
       {NavigationLinks.map((link, index) => (
         <SidebarLink

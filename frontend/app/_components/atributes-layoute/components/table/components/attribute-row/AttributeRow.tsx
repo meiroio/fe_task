@@ -1,28 +1,34 @@
+"use client";
 import { AiFillDelete } from "react-icons/ai";
 import { Attribute, Label } from "../../../../AttributesLayoute.types";
 import LabelPin from "../label-pin/LabelPin";
 import useApi from "@/app/_api/api";
 import { useModal } from "@/app/_components/modals/useModal";
+import { useRouter } from "next/navigation";
+import { useLabels } from "@/app/_contexts/labels-context/LabelsContext";
 
 interface AttributeRowProps {
   attribute: Attribute;
-  labels: Label[];
-  isEditMode: boolean;
+  isEditMode?: boolean;
+  refetch?: () => Promise<any>;
 }
 const AttributeRow: React.FC<AttributeRowProps> = ({
   attribute,
-  labels,
   isEditMode,
+  refetch,
 }) => {
   const { openModal } = useModal();
   const { deleteAttribute } = useApi();
+  const { labels } = useLabels();
+  const router = useRouter();
 
   const handleDeleteAttribute = (attributeId: string) => {
     openModal({
       header: "Delete Attribute",
       body: "Are you sure you want to delete this attribute?",
-      onConfirm: () => {
-        deleteAttribute(attributeId);
+      onConfirm: async () => {
+        await deleteAttribute(attributeId);
+        refetch ?? (await refetch!());
       },
       confirmText: "Delete",
       icon: <AiFillDelete className="w-10 h-10 text-red-600" />,
@@ -31,6 +37,9 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
 
   return (
     <tr
+      onClick={() => {
+        if (!isEditMode) router.push(`/attributes/${attribute.id}`);
+      }}
       className={`${
         !isEditMode
           ? "hover:bg-orange-100 cursor-pointer"

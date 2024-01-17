@@ -22,8 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} flex`}>
-        <Modal />
+      <body className={`${poppins.className} flex bg-gray-200`}>
         <SideBar />
         {children}
       </body>

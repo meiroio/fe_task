@@ -1,34 +1,16 @@
 import { useEffect, useState } from "react";
 import { useInfiniteQuery } from "react-query";
 import { AttributesLayoutProps } from "./AttributesLayoute";
-import {
-  Attribute,
-  AttributeFetchResponse,
-  Label,
-} from "./AttributesLayoute.types";
+import { Attribute, AttributeFetchResponse } from "./AttributesLayoute.types";
 import useApi from "@/app/_api/api";
 
 const useAttributesLayouteModel = (): AttributesLayoutProps => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
-  const [labels, setLabels] = useState<Label[]>([]);
   const [searchedText, setSearchedText] = useState("");
 
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const { fetchLabels: fetchLabelsResponse } = useApi();
-
-  const handleFetchLabels = async () => {
-    let labels: Label[] = [];
-    let labelsHaveNextPage: boolean = true;
-
-    while (labelsHaveNextPage) {
-      const labelsResponse = await fetchLabelsResponse(labels.length);
-      labels.push(...labelsResponse.data);
-      labelsHaveNextPage = labelsResponse.meta.hasNextPage;
-    }
-
-    setLabels(labels);
-  };
+  const { fetchAttributes } = useApi();
 
   const {
     data: attributesData,
@@ -39,10 +21,10 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
   } = useInfiniteQuery(
     "attributes",
     async ({ pageParam = 0 }) => {
-      const response = await fetch(
-        `http://127.0.0.1:3000/attributes?offset=${pageParam}&limit=10&searchText=${searchedText}`
-      );
-      const parsedResponse: AttributeFetchResponse = await response.json();
+      const parsedResponse: AttributeFetchResponse = await fetchAttributes({
+        pageParam,
+        searchedText,
+      });
       return {
         data: parsedResponse.data,
         nextPage: pageParam + 10,
@@ -73,20 +55,20 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
     }
   };
 
-  // Attach scroll event listener (consider useEffect to handle this)
-  window.addEventListener("scroll", handleScroll);
-
   useEffect(() => {
     refetch();
   }, [searchedText]);
 
   useEffect(() => {
-    handleFetchLabels();
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return {
     attributes,
-    labels,
     searchedText,
     setSearchedText,
     fetchNextPage,
@@ -94,6 +76,7 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
     hasNextPage: hasNextPage ?? true,
     setIsEditMode,
     isEditMode,
+    refetch,
   };
 };
 

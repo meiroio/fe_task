@@ -4,11 +4,11 @@ import AttributeRow from "./components/attribute-row/AttributeRow";
 
 interface TableProps {
   data: Attribute[];
-  labels: Label[];
   isEditMode: boolean;
+  refetch: () => Promise<any>;
 }
 
-const Table: React.FC<TableProps> = ({ data, labels, isEditMode }) => {
+const Table: React.FC<TableProps> = ({ data, isEditMode, refetch }) => {
   let heads = ["Name", "Labels", "Created At"];
 
   if (isEditMode) {
@@ -37,8 +37,8 @@ const Table: React.FC<TableProps> = ({ data, labels, isEditMode }) => {
               {data.map((attribute) => (
                 <AttributeRow
                   attribute={attribute}
-                  labels={labels}
                   isEditMode={isEditMode}
+                  refetch={refetch}
                   key={`attribute-${attribute.id}`}
                 />
               ))}
