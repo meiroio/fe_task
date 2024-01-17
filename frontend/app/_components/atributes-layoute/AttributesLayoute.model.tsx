@@ -3,14 +3,56 @@ import { useInfiniteQuery } from "react-query";
 import { AttributesLayoutProps } from "./AttributesLayoute";
 import { Attribute, AttributeFetchResponse } from "./AttributesLayoute.types";
 import useApi from "@/app/_api/api";
+import {
+  AiOutlineEdit,
+  AiOutlineEye,
+  AiOutlineSortAscending,
+  AiOutlineSortDescending,
+} from "react-icons/ai";
+import { BsAlphabet, BsFillCalendarDateFill } from "react-icons/bs";
+import { ToolbarItemProps } from "./components/toolbar/toolbar-item/ToolbarItem";
 
 const useAttributesLayouteModel = (): AttributesLayoutProps => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [searchedText, setSearchedText] = useState("");
 
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isSortingByName, setIsSortingByName] = useState(true);
+  const [isAscending, setIsAscending] = useState(true);
+
+  const [hasNextPageLocal, setHasNextPage] = useState(true);
 
   const { fetchAttributes } = useApi();
+
+  const haveIReachedTheEndOfWebsite = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const height = document.documentElement.scrollHeight;
+
+    if (scrollTop + windowHeight >= height) return true;
+    return false;
+  };
+
+  const toolbarTools: ToolbarItemProps[] = [
+    {
+      isDefault: isAscending,
+      toggleOptions: setIsAscending,
+      DefaultIcon: AiOutlineSortAscending,
+      SecondaryIcon: AiOutlineSortDescending,
+    },
+    {
+      isDefault: isSortingByName,
+      toggleOptions: setIsSortingByName,
+      DefaultIcon: BsAlphabet,
+      SecondaryIcon: BsFillCalendarDateFill,
+    },
+    {
+      isDefault: isEditMode,
+      toggleOptions: setIsEditMode,
+      DefaultIcon: AiOutlineEdit,
+      SecondaryIcon: AiOutlineEye,
+    },
+  ];
 
   const {
     data: attributesData,
@@ -24,7 +66,10 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
       const parsedResponse: AttributeFetchResponse = await fetchAttributes({
         pageParam,
         searchedText,
+        sortBy: isSortingByName ? "name" : "createdAt",
+        sortDir: isAscending ? "asc" : "desc",
       });
+      setHasNextPage(parsedResponse.meta.hasNextPage);
       return {
         data: parsedResponse.data,
         nextPage: pageParam + 10,
@@ -43,21 +88,18 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
 
   // Handle scrolling to fetch more items
   const handleScroll = () => {
-    if (
-      window.innerHeight + document.documentElement.scrollTop <=
-      document.documentElement.scrollHeight
-    ) {
+    if (!haveIReachedTheEndOfWebsite()) {
       return;
     }
 
-    if (!isFetchingNextPage && hasNextPage) {
+    if (!isFetchingNextPage && hasNextPageLocal) {
       fetchNextPage();
     }
   };
 
   useEffect(() => {
     refetch();
-  }, [searchedText]);
+  }, [searchedText, isSortingByName, isAscending]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -74,8 +116,7 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage: hasNextPage ?? true,
-    setIsEditMode,
-    isEditMode,
+    toolbarTools,
     refetch,
   };
 };

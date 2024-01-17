@@ -1,4 +1,5 @@
 import { AttributeFetchResponse } from "../_components/atributes-layoute/AttributesLayoute.types";
+import { fetchAttributProps } from "./api.types";
 
 const API_BASE_URL = "http://localhost:3000"; // Replace with your actual API base URL
 
@@ -6,13 +7,9 @@ interface useApiEndpoints {
   deleteAttribute: (id: string) => Promise<any>;
   fetchLabels: (offset: number) => Promise<any>;
   fetchAttribut: (id: string) => Promise<any>;
-  fetchAttributes: ({
-    pageParam,
-    searchedText,
-  }: {
-    pageParam: number;
-    searchedText: string;
-  }) => Promise<AttributeFetchResponse>;
+  fetchAttributes: (
+    props: fetchAttributProps
+  ) => Promise<AttributeFetchResponse>;
 }
 
 const useApi = (): useApiEndpoints => {
@@ -44,12 +41,11 @@ const useApi = (): useApiEndpoints => {
   const fetchAttributes = async ({
     pageParam,
     searchedText,
-  }: {
-    pageParam: number;
-    searchedText: string;
-  }) => {
+    sortBy = "name",
+    sortDir = "asc",
+  }: fetchAttributProps) => {
     const response = await fetch(
-      `http://127.0.0.1:3000/attributes?offset=${pageParam}&limit=10&searchText=${searchedText}`
+      `http://127.0.0.1:3000/attributes?offset=${pageParam}&limit=10&searchText=${searchedText}&sortBy=${sortBy}&sortDir=${sortDir}`
     );
     return await response.json();
   };
