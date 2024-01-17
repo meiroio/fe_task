@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { AttributesLayoutProps } from './AttributesLayoute';
-import { Attribute, AttributeFetchResponse } from './AttributesLayoute.types';
+import {
+	Attribute,
+	AttributeFetchResponse,
+	AttributesFetchResponse,
+} from './AttributesLayoute.types';
 import {
 	AiOutlineEdit,
 	AiOutlineEye,
@@ -67,7 +71,7 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
 	} = useInfiniteQuery(
 		'attributes',
 		async ({ pageParam = 0 }) => {
-			const parsedResponse: AttributeFetchResponse = await fetchAttributes({
+			const parsedResponse: AttributesFetchResponse = await fetchAttributes({
 				pageParam,
 				searchedText,
 				sortBy: isSortingByName ? 'name' : 'createdAt',

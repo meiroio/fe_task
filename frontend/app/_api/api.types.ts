@@ -1,4 +1,7 @@
-import { Attribute } from '../_components/atributes-layoute/AttributesLayoute.types';
+import {
+	Attribute,
+	AttributeFetchResponse,
+} from '../_components/atributes-layoute/AttributesLayoute.types';
 
 export interface fetchAttributProps {
 	pageParam: number;
@@ -11,4 +14,10 @@ export interface DeleteAttributeResponse {
 	isSuccessful: boolean;
 	error?: string;
 	data?: Attribute;
+}
+
+export interface AttributeFetchCompleateResponse {
+	isSuccessful: boolean;
+	error?: string;
+	data?: AttributeFetchResponse;
 }

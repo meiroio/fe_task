@@ -1,18 +1,23 @@
 import {
 	Attribute,
 	AttributeFetchResponse,
+	AttributesFetchResponse,
 } from '../_components/atributes-layoute/AttributesLayoute.types';
-import { DeleteAttributeResponse, fetchAttributProps } from './api.types';
+import {
+	AttributeFetchCompleateResponse,
+	DeleteAttributeResponse,
+	fetchAttributProps,
+} from './api.types';
 
 const API_BASE_URL = 'http://localhost:3000';
 
 interface useApiEndpoints {
 	deleteAttribute: (id: string) => Promise<DeleteAttributeResponse>;
 	fetchLabels: (offset: number) => Promise<any>;
-	fetchAttribut: (id: string) => Promise<any>;
+	fetchAttribute: (id: string) => Promise<AttributeFetchCompleateResponse>;
 	fetchAttributes: (
 		props: fetchAttributProps
-	) => Promise<AttributeFetchResponse>;
+	) => Promise<AttributesFetchResponse>;
 }
 
 const useApi = (): useApiEndpoints => {
@@ -38,10 +43,19 @@ const useApi = (): useApiEndpoints => {
 		return parsedLabelsResponse;
 	};
 
-	const fetchAttribut = async (id: string) => {
+	const fetchAttribute = async (
+		id: string
+	): Promise<AttributeFetchCompleateResponse> => {
 		const response = await fetch(`${API_BASE_URL}/attributes/${id}`);
-		const parsedAttributeResponse = await response.json();
-		return parsedAttributeResponse;
+
+		if (!response.ok) {
+			console.error('Failed to fetch attribute', response);
+			return { isSuccessful: false, error: response.statusText };
+		}
+
+		const parsedAttributeResponse: AttributeFetchResponse =
+			await response.json();
+		return { isSuccessful: true, data: parsedAttributeResponse };
 	};
 
 	const fetchAttributes = async ({
@@ -60,7 +74,7 @@ const useApi = (): useApiEndpoints => {
 		deleteAttribute,
 		fetchLabels,
 		fetchAttributes,
-		fetchAttribut,
+		fetchAttribute,
 	};
 };
 
