@@ -23,18 +23,18 @@ export const LabelsProvider: React.FC<{ children: React.ReactNode }> = ({
 		let labels: Label[] = [];
 		let labelsHaveNextPage: boolean = true;
 
-		while (labelsHaveNextPage) {
+		do {
 			const labelsResponse = await fetchLabelsResponse(labels.length);
 			labels.push(...labelsResponse.data);
 			labelsHaveNextPage = labelsResponse.meta.hasNextPage;
-		}
+		} while (labelsHaveNextPage);
 
 		setLabels(labels);
 	};
 
 	useEffect(() => {
 		handleFetchLabels();
-	});
+	}, []);
 
 	return (
 		<LabelsContext.Provider value={{ labels: labels }}>
