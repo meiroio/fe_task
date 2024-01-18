@@ -31,7 +31,7 @@ const DetailScreen: React.FC = () => {
 		};
 
 		initialFetch();
-	});
+	}, []);
 
 	const handleDeleteAttribute = (attributeId: string) => {
 		openModal({

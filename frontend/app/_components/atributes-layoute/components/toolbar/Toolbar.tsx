@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import ToolbarItem, { ToolbarItemProps } from './toolbar-item/ToolbarItem';
 
 type ToolbarProps = {

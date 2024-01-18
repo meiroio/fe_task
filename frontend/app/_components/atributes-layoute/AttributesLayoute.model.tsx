@@ -118,7 +118,7 @@ const useAttributesLayouteModel = (): AttributesLayoutProps => {
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 		};
-	});
+	}, []);
 
 	return {
 		attributes,
