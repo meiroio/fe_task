@@ -1,0 +1,15 @@
+.active {
+  font-weight: bold;
+  background-color: blue;
+  color: white !important;
+  padding: 10px;
+}
+.active + h6 {
+  color: white !important;
+  padding-left: 10px;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
