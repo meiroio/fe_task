@@ -2,7 +2,6 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
@@ -35,14 +34,12 @@ export const RootNavigationMenu = () => {
       <NavigationMenu className="container">
         <NavigationMenuList>
           {NAVIGATION_CONFIG.map(({ title, route, icon }) => (
-            <NavigationMenuItem>
-              <Link to={route}>
-                <NavigationMenuLink
-                  className={`${navigationMenuTriggerStyle()} flex gap-1`}
-                >
+            <NavigationMenuItem key={route}>
+              <Link to={route} className={navigationMenuTriggerStyle()}>
+                <div className="flex gap-1">
                   {icon}
                   {title}
-                </NavigationMenuLink>
+                </div>
               </Link>
               <NavigationMenuContent></NavigationMenuContent>
             </NavigationMenuItem>
