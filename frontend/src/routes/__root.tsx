@@ -16,14 +16,14 @@ export const Route = createRootRouteWithContext<{
   queryClient: typeof queryClient;
 }>()({
   component: () => (
-    <>
+    <div className="w-svw h-svh flex flex-col">
       <RootNavigationMenu />
-      <div className="container">
+      <div className="container flex-1">
         <Outlet />
       </div>
       <Suspense>
         <TanStackRouterDevtools initialIsOpen={false} />
       </Suspense>
-    </>
+    </div>
   ),
 });
