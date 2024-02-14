@@ -35,13 +35,14 @@ export const fetchAttributes = async ({
   return response.json();
 };
 
-export const attributesQueryOptions = (opts: { searchText?: string }) =>
+export const attributesQueryOptions = (opts: AttributesQueryOptions) =>
   infiniteQueryOptions<AttributeQuery>({
     queryKey: [QUERY_KEY, opts],
     queryFn: ({ pageParam }) => fetchAttributes({ pageParam, opts }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      const nextOffset = lastPage.meta.offset + lastPage.meta.offset;
+      const nextOffset = lastPage.meta.offset + lastPage.meta.limit;
+
       return lastPage.meta.hasNextPage ? nextOffset : undefined;
     },
   });

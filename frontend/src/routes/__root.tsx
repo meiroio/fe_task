@@ -1,4 +1,8 @@
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  Outlet,
+  ScrollRestoration,
+} from "@tanstack/react-router";
 import React, { Suspense } from "react";
 import { RootNavigationMenu } from "@/components/navigation-menu";
 import { queryClient } from "@/react-query";
@@ -19,6 +23,14 @@ export const Route = createRootRouteWithContext<{
     <div className="w-svw h-svh flex flex-col">
       <RootNavigationMenu />
       <div className="container flex-1">
+        <ScrollRestoration
+          getKey={(location) => {
+            const paths = ["/attributes"];
+            return paths.includes(location.pathname)
+              ? location.pathname
+              : location.hash;
+          }}
+        />
         <Outlet />
       </div>
       <Suspense>

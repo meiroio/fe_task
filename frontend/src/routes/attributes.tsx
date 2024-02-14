@@ -7,7 +7,9 @@ export const Route = createFileRoute("/attributes")({
   validateSearch: z.object({
     searchText: z.string().optional(),
   }).parse,
-  loaderDeps: ({ search: { searchText } }) => ({ searchText }),
+  loaderDeps: ({ search: { searchText } }) => ({
+    searchText,
+  }),
   loader: async ({ context: { queryClient }, deps }) => {
     const options = attributesQueryOptions(deps);
 
