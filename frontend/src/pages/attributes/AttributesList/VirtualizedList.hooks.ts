@@ -4,34 +4,34 @@ import { useRef, useEffect } from "react";
 
 type HookParams = {
   hasNextPage: boolean;
-  allRows: AttributeType[];
+  allItems: AttributeType[];
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
 };
 
 export const useVirtualScroll = ({
   hasNextPage,
-  allRows,
+  allItems,
   isFetchingNextPage,
   fetchNextPage,
 }: HookParams) => {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const virtualizer = useVirtualizer({
-    count: hasNextPage ? allRows.length + 1 : allRows.length,
+    count: hasNextPage ? allItems.length + 1 : allItems.length,
     getScrollElement: () => scrollerRef.current,
     estimateSize: () => 100,
   });
   const vritualItems = virtualizer.getVirtualItems();
 
   useEffect(() => {
-    const [lastItem] = [...vritualItems].reverse();
+    const lastItem = vritualItems.at(-1);
 
     if (!lastItem) {
       return;
     }
 
     if (
-      lastItem.index >= allRows.length - 1 &&
+      lastItem.index >= allItems.length - 1 &&
       hasNextPage &&
       !isFetchingNextPage
     ) {
@@ -40,7 +40,7 @@ export const useVirtualScroll = ({
   }, [
     hasNextPage,
     fetchNextPage,
-    allRows.length,
+    allItems.length,
     isFetchingNextPage,
     vritualItems,
   ]);
