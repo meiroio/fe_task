@@ -1,8 +1,8 @@
 import { AttributeQuery } from "@/types/attributes";
-import { infiniteQueryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, keepPreviousData } from "@tanstack/react-query";
 import { AttributesQueryOptions } from "./AttributesPage.types";
 
-export const QUERY_KEY = "attributes";
+export const ATTRIBUTES_QUERY_KEY = "attributes";
 const DEFAULT_LIMIT = 10;
 
 export const fetchAttributes = async ({
@@ -41,7 +41,7 @@ export const fetchAttributes = async ({
 
 export const attributesQueryOptions = (opts: AttributesQueryOptions) =>
   infiniteQueryOptions<AttributeQuery>({
-    queryKey: [QUERY_KEY, opts],
+    queryKey: [ATTRIBUTES_QUERY_KEY, opts],
     queryFn: ({ pageParam }) => fetchAttributes({ pageParam, opts }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
@@ -49,4 +49,18 @@ export const attributesQueryOptions = (opts: AttributesQueryOptions) =>
 
       return lastPage.meta.hasNextPage ? nextOffset : undefined;
     },
+    placeholderData: keepPreviousData,
   });
+
+/*DLETE QUERY*/
+export const deleteAttribute = async (id: string) => {
+  const response = await fetch(`http://localhost:3000/attributes/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return response.json();
+};
