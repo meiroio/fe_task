@@ -1,5 +1,5 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
 type HookParams<T> = {
   hasNextPage: boolean;
@@ -18,31 +18,33 @@ export const useVirtualScroll = <T>({
   const virtualizer = useVirtualizer({
     count: hasNextPage ? allItems.length + 1 : allItems.length,
     getScrollElement: () => scrollerRef.current,
-    estimateSize: () => 100,
+    estimateSize: () => 80,
+    measureElement:
+      typeof window !== "undefined" &&
+      navigator.userAgent.indexOf("Firefox") === -1
+        ? (element) => element?.getBoundingClientRect().height
+        : undefined,
   });
-  const vritualItems = virtualizer.getVirtualItems();
+
+  const fetchMoreOnBottomReached = useCallback(
+    (containerRefElement?: HTMLDivElement | null) => {
+      if (containerRefElement) {
+        const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+        if (
+          scrollHeight - scrollTop - clientHeight < 80 &&
+          !isFetchingNextPage &&
+          hasNextPage
+        ) {
+          fetchNextPage();
+        }
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage],
+  );
 
   useEffect(() => {
-    const lastItem = vritualItems.at(-1);
+    fetchMoreOnBottomReached(scrollerRef.current);
+  }, [fetchMoreOnBottomReached]);
 
-    if (!lastItem) {
-      return;
-    }
-
-    if (
-      lastItem.index >= allItems.length - 1 &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage();
-    }
-  }, [
-    hasNextPage,
-    fetchNextPage,
-    allItems.length,
-    isFetchingNextPage,
-    vritualItems,
-  ]);
-
-  return { virtualizer, scrollerRef };
+  return { virtualizer, scrollerRef, fetchMoreOnBottomReached };
 };

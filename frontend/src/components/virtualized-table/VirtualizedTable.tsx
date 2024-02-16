@@ -1,8 +1,11 @@
 import {
-  ColumnDef,
+  ColumnSort,
+  OnChangeFn,
   Row,
+  SortingState,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -16,16 +19,9 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useVirtualScroll } from "./VirtualTable.hook";
-import { ArrowDownNarrowWideIcon, ArrowDownWideNarrowIcon } from "lucide-react";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  hasNextPage: boolean;
-  className?: string;
-  fetchNextPage: () => void;
-  isFetchingNextPage: boolean;
-}
+import { ArrowDownWideNarrowIcon, ArrowUpNarrowWideIcon } from "lucide-react";
+import { useState } from "react";
+import { DataTableProps, TableSortState } from "./VirtualTable.types";
 
 export function VirtualizedDataTable<TData, TValue>({
   columns,
@@ -34,113 +30,142 @@ export function VirtualizedDataTable<TData, TValue>({
   className,
   fetchNextPage,
   isFetchingNextPage,
+  onSort,
+  initialSort,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>(
+    initialSort?.id ? [initialSort as ColumnSort] : [],
+  );
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+    },
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualSorting: true,
   });
+
+  const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
+    if (table.getRowModel().rows.length) {
+      virtualizer.scrollToIndex?.(0);
+    }
+
+    if (typeof updater === "function") {
+      const update = updater(table.getState().sorting);
+      setSorting(update);
+      if (onSort) {
+        const data = update[0] as ColumnSort;
+        onSort(data as TableSortState<TData> | undefined);
+      }
+    }
+  };
+
+  table.setOptions((prev) => ({
+    ...prev,
+    onSortingChange: handleSortingChange,
+  }));
 
   const { rows } = table.getRowModel();
 
-  const { virtualizer, scrollerRef } = useVirtualScroll<Row<TData>>({
-    allItems: rows,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  });
+  const { virtualizer, scrollerRef, fetchMoreOnBottomReached } =
+    useVirtualScroll<Row<TData>>({
+      allItems: rows,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+    });
 
   return (
     <div
+      className={cn("border rounded-md overflow-auto relative", className)}
+      onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
       ref={scrollerRef}
-      className={cn("overflow-auto border rounded-md", className)}
     >
-      <div style={{ height: `${virtualizer.getTotalSize()}px` }}>
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      style={{ width: header.getSize() }}
+      <Table className="grid">
+        <TableHeader className="grid sticky top-0 z-10 bg-secondary">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="flex w-full">
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead
+                    key={header.id}
+                    className="flex items-center flex-1"
+                    style={{
+                      width: header.getSize(),
+                    }}
+                  >
+                    <div
+                      {...{
+                        className: header.column.getCanSort()
+                          ? "cursor-pointer select-none flex gap-1 items-center"
+                          : "",
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
                     >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? "cursor-pointer select-none flex items-center gap-1"
-                              : "",
-                            onClick: header.column.getToggleSortingHandler(),
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                      {{
+                        desc: <ArrowDownWideNarrowIcon size={16} />,
+                        asc: <ArrowUpNarrowWideIcon size={16} />,
+                      }[header.column.getIsSorted() as string] ?? null}
+                    </div>
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody
+          className="gird relative"
+          style={{
+            height: `${virtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
+          }}
+        >
+          {virtualizer.getVirtualItems().map((virtualRow) => {
+            const isLoaderRow = virtualRow.index > rows.length - 1;
+            const row = rows[virtualRow.index] as Row<TData>;
+
+            if (!row) {
+              return null;
+            }
+
+            return (
+              <TableRow
+                data-index={virtualRow.index} //needed for dynamic row height measurement
+                ref={(node) => virtualizer.measureElement(node)} //measure dynamic row height
+                key={row.id}
+                className="flex absolute w-full h-[80px]" // h-[80px] does not need to be there (I added it there cos I did not have enaugh data to make the infinite loading nicer expereinec since there is not enaugh data)
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                {isLoaderRow
+                  ? "Is Loading"
+                  : row.getVisibleCells().map((cell) => {
+                      return (
+                        <TableCell
+                          key={cell.id}
+                          className="flex items-center flex-1"
+                          style={{
+                            width: cell.column.getSize(),
                           }}
                         >
                           {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
                           )}
-                          {{
-                            asc: <ArrowDownNarrowWideIcon size={16} />,
-                            desc: <ArrowDownWideNarrowIcon size={16} />,
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
-                      )}
-                    </TableHead>
-                  );
-                })}
+                        </TableCell>
+                      );
+                    })}
               </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {virtualizer.getVirtualItems().map((virtualRow, index) => {
-              const isLoaderRow = virtualRow.index > rows.length - 1;
-              const row = rows[virtualRow.index] as Row<TData>;
-
-              if (isLoaderRow) {
-                return (
-                  <TableRow
-                    key={virtualRow.index}
-                    style={{
-                      height: `${virtualRow.size}px`,
-                      transform: `translateY(${
-                        virtualRow.start - index * virtualRow.size
-                      }px)`,
-                    }}
-                  >
-                    <TableCell colSpan={columns.length}>
-                      {hasNextPage ? "Loading more..." : "No more data!"}
-                    </TableCell>
-                  </TableRow>
-                );
-              }
-
-              return (
-                <TableRow
-                  key={row.id}
-                  style={{
-                    height: `${virtualRow.size}px`,
-                    transform: `translateY(${
-                      virtualRow.start - index * virtualRow.size
-                    }px)`,
-                  }}
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+            );
+          })}
+        </TableBody>
+      </Table>
     </div>
   );
 }

@@ -13,15 +13,19 @@ export const fetchAttributes = async ({
   opts: AttributesQueryOptions;
 }) => {
   const url = new URL("http://localhost:3000/attributes");
-  const { searchText } = opts;
 
   const params = new URLSearchParams({
     offset: typeof pageParam === "number" ? pageParam.toString() : "0",
     limit: DEFAULT_LIMIT.toString(),
   });
 
-  if (searchText) {
-    params.set("searchText", encodeURIComponent(searchText));
+  for (const key in opts) {
+    if (Object.prototype.hasOwnProperty.call(opts, key)) {
+      const value = (opts as Record<string, string>)[key];
+      if (value) {
+        params.set(key, encodeURIComponent(value));
+      }
+    }
   }
 
   url.search = params.toString();

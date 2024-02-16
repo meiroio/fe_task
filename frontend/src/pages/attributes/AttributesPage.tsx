@@ -6,10 +6,12 @@ import { Route } from "@/routes/attributes";
 import { useEffect } from "react";
 import { useDebouncedState } from "@/lib/debounce-state.hook";
 import { AttributesTable } from "./AttributesTable/AttributesTable";
+import { AttributesQueryOptions } from "./AttributesPage.types";
+import { AttributeType } from "@/types/attributes";
 
 export const Attributes = () => {
   const navigate = useNavigate({ from: Route.fullPath });
-  const { searchText } = Route.useSearch();
+  const { searchText, sortBy, sortDir } = Route.useSearch();
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useSuspenseInfiniteQuery(attributesQueryOptions(Route.useLoaderDeps()));
 
@@ -18,16 +20,32 @@ export const Attributes = () => {
     original: originalSearchDraft,
   } = useDebouncedState(searchText ?? "", 300);
 
-  useEffect(() => {
+  const setSearchParams = (params: AttributesQueryOptions) => {
     navigate({
       search: (old) => {
         return {
           ...old,
-          searchText: searchDraft || undefined,
+          ...params,
         };
       },
       replace: true,
     });
+  };
+
+  const handleSort = (sort?: { id: keyof AttributeType; desc: boolean }) => {
+    if (!sort) {
+      setSearchParams({ sortBy: undefined, sortDir: undefined });
+      return;
+    }
+
+    if (sort.id !== "name" && sort.id !== "createdAt") {
+      return;
+    }
+    setSearchParams({ sortBy: sort.id, sortDir: sort.desc ? "desc" : "asc" });
+  };
+
+  useEffect(() => {
+    setSearchParams({ searchText: searchDraft || undefined });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchDraft]);
 
@@ -39,6 +57,12 @@ export const Attributes = () => {
         onChange={(e) => setSearchDraft(e.target.value)}
       />
       <AttributesTable
+        initialSort={
+          sortBy && sortDir !== undefined
+            ? { id: sortBy, desc: sortDir === "desc" }
+            : undefined
+        }
+        onSort={handleSort}
         data={data.pages.flatMap((d) => d.data)}
         fetchNextPage={fetchNextPage}
         isFetchingNextPage={isFetchingNextPage}
