@@ -1,20 +1,19 @@
-import { AttributeType } from "@/types/attributes";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useRef, useEffect } from "react";
 
-type HookParams = {
+type HookParams<T> = {
   hasNextPage: boolean;
-  allItems: AttributeType[];
+  allItems: T[];
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
 };
 
-export const useVirtualScroll = ({
+export const useVirtualScroll = <T>({
   hasNextPage,
   allItems,
   isFetchingNextPage,
   fetchNextPage,
-}: HookParams) => {
+}: HookParams<T>) => {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const virtualizer = useVirtualizer({
     count: hasNextPage ? allItems.length + 1 : allItems.length,

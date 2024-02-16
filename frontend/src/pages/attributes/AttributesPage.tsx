@@ -5,7 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/attributes";
 import { useEffect } from "react";
 import { useDebouncedState } from "@/lib/debounce-state.hook";
-import { VirtualizedList } from "./AttributesList";
+import { AttributesTable } from "./AttributesTable/AttributesTable";
 
 export const Attributes = () => {
   const navigate = useNavigate({ from: Route.fullPath });
@@ -38,8 +38,8 @@ export const Attributes = () => {
         value={originalSearchDraft}
         onChange={(e) => setSearchDraft(e.target.value)}
       />
-      <VirtualizedList
-        data={data}
+      <AttributesTable
+        data={data.pages.flatMap((d) => d.data)}
         fetchNextPage={fetchNextPage}
         isFetchingNextPage={isFetchingNextPage}
         hasNextPage={hasNextPage}
