@@ -20,11 +20,13 @@
     "@tanstack/react-virtual": "^3.0.4",
     "@tanstack/router-devtools": "^1.16.0",
     "@tanstack/router-vite-plugin": "^1.16.1",
+    "@types/react-helmet-async": "^1.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.330.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet-async": "^2.0.4",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"

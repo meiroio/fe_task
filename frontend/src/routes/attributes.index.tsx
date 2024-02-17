@@ -2,6 +2,7 @@ import { RouterErrorFallaback } from "@/components/RouterErrorFallback";
 import { Attributes, attributesQueryOptions } from "@/pages";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { Helmet } from "react-helmet-async";
 
 export const Route = createFileRoute("/attributes/")({
   validateSearch: z.object({
@@ -23,6 +24,13 @@ export const Route = createFileRoute("/attributes/")({
 
     return data;
   },
-  component: Attributes,
+  component: () => (
+    <>
+      <Helmet>
+        <title>Attributes</title>
+      </Helmet>
+      <Attributes />
+    </>
+  ),
   errorComponent: RouterErrorFallaback,
 });
