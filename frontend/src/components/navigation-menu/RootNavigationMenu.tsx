@@ -31,11 +31,15 @@ const NAVIGATION_CONFIG: NavigationConfig[] = [
 export const RootNavigationMenu = () => {
   return (
     <div className="border-b border-gray-200 w-full py-2">
-      <NavigationMenu className="container">
+      <NavigationMenu className="container m-0">
         <NavigationMenuList>
           {NAVIGATION_CONFIG.map(({ title, route, icon }) => (
             <NavigationMenuItem key={route}>
-              <Link to={route} className={navigationMenuTriggerStyle()}>
+              <Link
+                to={route}
+                className={navigationMenuTriggerStyle()}
+                activeProps={{ className: "bg-secondary" }}
+              >
                 <div className="flex gap-1">
                   {icon}
                   {title}
