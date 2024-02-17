@@ -6,6 +6,7 @@ import {
 import React, { Suspense } from "react";
 import { RootNavigationMenu } from "@/components/navigation-menu";
 import { queryClient } from "@/react-query";
+import { Toaster } from "@/components/ui/toaster";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
@@ -36,6 +37,7 @@ export const Route = createRootRouteWithContext<{
       <Suspense>
         <TanStackRouterDevtools initialIsOpen={false} />
       </Suspense>
+      <Toaster />
     </div>
   ),
 });

@@ -11,9 +11,10 @@ import { AttributeType } from "@/types/attributes";
 
 type Props = {
   attribute: AttributeType;
+  onDelete: (attributeId: string) => void;
 };
 
-export const AttributeCard = ({ attribute }: Props) => {
+export const AttributeCard = ({ attribute, onDelete }: Props) => {
   return (
     <Card className="max-w-[300px]">
       <CardHeader>
@@ -31,7 +32,11 @@ export const AttributeCard = ({ attribute }: Props) => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" variant="destructive">
+        <Button
+          onClick={() => onDelete(attribute.id)}
+          className="w-full"
+          variant="destructive"
+        >
           Delete
         </Button>
       </CardFooter>

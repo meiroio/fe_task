@@ -5,11 +5,20 @@ import { useRouter } from "@tanstack/react-router";
 import { attributeQueryOptions } from "./api";
 import { AttributeCard } from "./AttributeCard";
 import { ArrowLeftIcon } from "lucide-react";
+import { queryClient, useDeleteAttributeByIdQuery } from "@/react-query";
+import { ATTRIBUTES_QUERY_KEY } from "../attributes";
 
 export const AttributePage = () => {
   const { attributeId } = Route.useSearch();
   const { data } = useSuspenseQuery(attributeQueryOptions(attributeId));
   const router = useRouter();
+
+  const { mutate } = useDeleteAttributeByIdQuery(() => {
+    router.history.back();
+    queryClient.invalidateQueries({
+      queryKey: [ATTRIBUTES_QUERY_KEY],
+    });
+  });
 
   return (
     <div className="flex flex-col gap-4 py-3">
@@ -18,7 +27,7 @@ export const AttributePage = () => {
           <ArrowLeftIcon size={18} /> Back to Attributes
         </Button>
       </div>
-      <AttributeCard attribute={data.data} />
+      <AttributeCard onDelete={mutate} attribute={data.data} />
     </div>
   );
 };
