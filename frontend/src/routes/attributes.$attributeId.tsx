@@ -5,13 +5,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Helmet } from "react-helmet-async";
 import { z } from "zod";
 
-export const Route = createFileRoute("/attributes/attribute")({
-  validateSearch: z.object({
-    attributeId: z.string(),
-  }).parse,
-  loaderDeps: ({ search: { attributeId } }) => ({ attributeId }),
-  loader: async ({ context: { queryClient }, deps }) =>
-    queryClient.ensureQueryData(attributeQueryOptions(deps.attributeId)),
+export const Route = createFileRoute("/attributes/$attributeId")({
+  parseParams: (params) => ({
+    attributeId: z.string().parse(params.attributeId),
+  }),
+  loader: async ({ context: { queryClient }, params }) =>
+    queryClient.ensureQueryData(attributeQueryOptions(params.attributeId)),
   component: () => (
     <>
       <Helmet>

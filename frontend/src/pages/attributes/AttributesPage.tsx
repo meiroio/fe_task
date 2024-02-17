@@ -64,8 +64,8 @@ export const Attributes = () => {
         }
         onRowClick={(row) => {
           navigate({
-            to: "/attributes/attribute",
-            search: { attributeId: row.original.id },
+            to: "/attributes/$attributeId",
+            params: { attributeId: row.original.id },
           });
         }}
         onSort={handleSort}

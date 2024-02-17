@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Route } from "@/routes/attributes.attribute";
+import { Route } from "@/routes/attributes.$attributeId";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { attributeQueryOptions } from "./api";
@@ -9,7 +9,7 @@ import { queryClient, useDeleteAttributeByIdQuery } from "@/react-query";
 import { ATTRIBUTES_QUERY_KEY } from "../attributes";
 
 export const AttributePage = () => {
-  const { attributeId } = Route.useSearch();
+  const { attributeId } = Route.useParams();
   const { data } = useSuspenseQuery(attributeQueryOptions(attributeId));
   const router = useRouter();
 
