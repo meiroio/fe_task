@@ -1,4 +1,4 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 
 export type TableSortState<T> = { id: keyof T; desc: boolean };
 
@@ -11,4 +11,5 @@ export type DataTableProps<TData, TValue> = {
   isFetchingNextPage: boolean;
   onSort?: (sort?: TableSortState<TData>) => void;
   initialSort?: TableSortState<TData>;
+  onRowClick?: (row: Row<TData>) => void;
 };

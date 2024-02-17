@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { attributesQueryOptions } from "./api";
 import { useNavigate } from "@tanstack/react-router";
-import { Route } from "@/routes/attributes";
+import { Route } from "@/routes/attributes.index";
 import { useEffect } from "react";
 import { useDebouncedState } from "@/lib/debounce-state.hook";
 import { AttributesTable } from "./AttributesTable/AttributesTable";
@@ -62,6 +62,12 @@ export const Attributes = () => {
             ? { id: sortBy, desc: sortDir === "desc" }
             : undefined
         }
+        onRowClick={(row) => {
+          navigate({
+            to: "/attributes/attribute",
+            search: { attributeId: row.original.id },
+          });
+        }}
         onSort={handleSort}
         data={data.pages.flatMap((d) => d.data)}
         fetchNextPage={fetchNextPage}

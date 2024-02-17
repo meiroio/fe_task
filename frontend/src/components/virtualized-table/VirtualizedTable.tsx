@@ -32,6 +32,7 @@ export function VirtualizedDataTable<TData, TValue>({
   isFetchingNextPage,
   onSort,
   initialSort,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>(
     initialSort?.id ? [initialSort as ColumnSort] : [],
@@ -135,10 +136,11 @@ export function VirtualizedDataTable<TData, TValue>({
 
             return (
               <TableRow
+                onClick={() => onRowClick?.(row)}
                 data-index={virtualRow.index} //needed for dynamic row height measurement
                 ref={(node) => virtualizer.measureElement(node)} //measure dynamic row height
                 key={row.id}
-                className="flex absolute w-full h-[80px]" // h-[80px] does not need to be there (I added it there cos I did not have enaugh data to make the infinite loading nicer expereinec since there is not enaugh data)
+                className={`flex absolute w-full h-[80px] ${onRowClick ? "cursor-pointer" : ""}`} // h-[80px] does not need to be there (I added it there cos I did not have enaugh data to make the infinite loading nicer expereinec since there is not enaugh data)
                 style={{
                   transform: `translateY(${virtualRow.start}px)`,
                 }}

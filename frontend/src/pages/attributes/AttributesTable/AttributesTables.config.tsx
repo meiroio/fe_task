@@ -27,7 +27,10 @@ export const getColumns = (
         <Button
           variant="destructive"
           size="icon"
-          onClick={() => onDelete(row.original.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(row.original.id);
+          }}
         >
           <TrashIcon size={18} />
         </Button>

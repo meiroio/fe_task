@@ -3,7 +3,7 @@ import { Attributes, attributesQueryOptions } from "@/pages";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-export const Route = createFileRoute("/attributes")({
+export const Route = createFileRoute("/attributes/")({
   validateSearch: z.object({
     searchText: z.string().optional(),
     sortBy: z.enum(["name", "createdAt"]).optional(),
