@@ -2,6 +2,7 @@ import { AttributeQuery } from "@/types/attributes";
 import { infiniteQueryOptions, keepPreviousData } from "@tanstack/react-query";
 import { AttributesQueryOptions as AttributesQueryDeps } from "./AttributesPage.types";
 import { api } from "@/lib/api.service";
+import { LabelsQuery } from "@/types/labels";
 
 export const ATTRIBUTES_QUERY_KEY = "attributes";
 const DEFAULT_LIMIT = 10;
@@ -36,9 +37,12 @@ export const fetchAttributes = async ({
   return response.json();
 };
 
-export const attributesQueryOptions = (deps: AttributesQueryDeps) =>
+export const attributesQueryOptions = (
+  deps: AttributesQueryDeps,
+  labels: LabelsQuery,
+) =>
   infiniteQueryOptions<AttributeQuery>({
-    queryKey: [ATTRIBUTES_QUERY_KEY, deps],
+    queryKey: [ATTRIBUTES_QUERY_KEY, deps, labels],
     queryFn: ({ pageParam }) => fetchAttributes({ pageParam, deps }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
@@ -47,4 +51,5 @@ export const attributesQueryOptions = (deps: AttributesQueryDeps) =>
       return lastPage.meta.hasNextPage ? nextOffset : undefined;
     },
     placeholderData: keepPreviousData,
+    enabled: !!labels,
   });

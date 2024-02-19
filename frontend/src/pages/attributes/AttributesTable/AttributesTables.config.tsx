@@ -12,7 +12,8 @@ export const getColumns = (
   },
   {
     header: "Labels",
-    cell: ({ row }) => row.original.labelIds.join(", "),
+    cell: ({ row }) =>
+      (row.original.labels || row.original.labelIds).join(", "),
   },
   {
     accessorKey: "createdAt",

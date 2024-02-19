@@ -3,6 +3,7 @@ export type AttributeType = {
   name: string;
   createdAt: string; // ISO8601 string
   labelIds: string[];
+  labels?: (string | undefined)[];
   deleted: boolean;
 };
 

@@ -1,5 +1,6 @@
 import { api } from "@/lib/api.service";
 import { AttributeType } from "@/types/attributes";
+import { LabelsQuery } from "@/types/labels";
 import { queryOptions } from "@tanstack/react-query";
 
 export const ATTRIBUTE_QUERY_KEY = "attribute";
@@ -14,8 +15,12 @@ export const fetchAttributeById = async (attributeId: string) => {
   return response.json();
 };
 
-export const attributeQueryOptions = (attributeId: string) =>
+export const attributeQueryOptions = (
+  attributeId: string,
+  labels?: LabelsQuery,
+) =>
   queryOptions<{ data: AttributeType }>({
-    queryKey: [ATTRIBUTE_QUERY_KEY, attributeId],
+    queryKey: [ATTRIBUTE_QUERY_KEY, attributeId, labels],
     queryFn: () => fetchAttributeById(attributeId),
+    enabled: !!labels,
   });

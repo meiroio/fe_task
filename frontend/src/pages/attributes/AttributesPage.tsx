@@ -1,19 +1,37 @@
 import { Input } from "@/components/ui/input";
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import {
+  useSuspenseInfiniteQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { attributesQueryOptions } from "./api";
 import { useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/attributes.index";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDebouncedState } from "@/lib/debounce-state.hook";
 import { AttributesTable } from "./AttributesTable/AttributesTable";
 import { AttributesQueryOptions } from "./AttributesPage.types";
 import { AttributeType } from "@/types/attributes";
+import { labelsQueryOptions } from "@/react-query";
 
 export const Attributes = () => {
   const navigate = useNavigate({ from: Route.fullPath });
   const { searchText, sortBy, sortDir } = Route.useSearch();
+  const { data: labels } = useSuspenseQuery(labelsQueryOptions);
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useSuspenseInfiniteQuery(attributesQueryOptions(Route.useLoaderDeps()));
+    useSuspenseInfiniteQuery(
+      attributesQueryOptions(Route.useLoaderDeps(), labels),
+    );
+
+  const attributes = useMemo(() => {
+    return data.pages.flatMap((page) => {
+      page.data.forEach((attribute) => {
+        attribute.labels = attribute.labelIds.map(
+          (id) => labels.data.find((label) => label.id === id)?.name,
+        );
+      });
+      return page.data;
+    });
+  }, [data.pages, labels.data]);
 
   const {
     debounced: [searchDraft, setSearchDraft],
@@ -69,7 +87,7 @@ export const Attributes = () => {
           });
         }}
         onSort={handleSort}
-        data={data.pages.flatMap((d) => d.data)}
+        data={attributes}
         fetchNextPage={fetchNextPage}
         isFetchingNextPage={isFetchingNextPage}
         hasNextPage={hasNextPage}

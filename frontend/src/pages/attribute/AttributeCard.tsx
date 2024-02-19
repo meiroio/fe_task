@@ -24,7 +24,7 @@ export const AttributeCard = ({ attribute, onDelete }: Props) => {
       <CardContent className="flex flex-col gap-3">
         <div>
           <p className="font-semibold">Labels</p>
-          <p>{attribute.labelIds.join(", ")}</p>
+          <p>{(attribute.labels || attribute.labelIds).join(", ")}</p>
         </div>
         <div>
           <p className="font-semibold">Created At</p>
