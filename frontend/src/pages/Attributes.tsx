@@ -2,13 +2,17 @@ import { Layout, Table } from '../components';
 import { useAttributes } from '../hooks';
 
 const Attributes = () => {
-  const { data, isFetching } = useAttributes();
+  const { query, setSortBy } = useAttributes();
+  const { data, isFetching } = query;
 
   return (
     <Layout>
-      <h1>/attributes</h1>
       {/* just show first page for now */}
-      <Table data={data?.pages[0].data} isFetching={isFetching} />
+      <Table
+        data={data?.pages[0].data}
+        isFetching={isFetching}
+        setSortBy={setSortBy}
+      />
     </Layout>
   );
 };

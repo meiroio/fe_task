@@ -5,11 +5,6 @@ type Params = {
 
 export type GetAttributeParams = Params & {
   searchText: string;
-  sortBy: string;
+  sortBy: 'name' | 'createdAt';
   sortDir: 'asc' | 'desc';
-};
-
-export type ApiResponse<T, U extends Params> = {
-  data: T;
-  meta: U;
 };
