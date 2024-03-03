@@ -1,43 +1,49 @@
 import { useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useDebounce } from './useDebounce';
 import { fetchAttributes } from '../api';
 
 import type { GetAttributeParams } from '../types';
+import { $params } from '../store';
 
 const useAttributes = () => {
-  const [params, setParams] = useState<GetAttributeParams>({
-    offset: 0,
-    limit: 10,
-    searchText: '',
-    sortBy: 'name',
-    sortDir: 'asc',
-  });
+  const [searchText, setSearchText] = useState($params.get().searchText);
+  const [params, setParams] = useState<GetAttributeParams>($params.get());
 
   const setSortBy = (sortBy: GetAttributeParams['sortBy']) => {
-    setParams((prev) => ({
-      ...prev,
+    const newParams = {
+      ...params,
       sortBy,
       sortDir:
-        prev.sortBy === sortBy
-          ? prev.sortDir === 'asc'
+        params.sortBy === sortBy
+          ? params.sortDir === 'asc'
             ? 'desc'
             : 'asc'
           : 'asc',
-    }));
+    } satisfies GetAttributeParams;
+
+    setParams(newParams);
+    $params.set(newParams);
   };
 
   const query = useInfiniteQuery({
-    queryKey: ['attributes', params],
-    queryFn: () => fetchAttributes(params),
+    queryKey: ['attributes', params, useDebounce(searchText)],
+    queryFn: () => fetchAttributes({ ...params, searchText }),
     initialPageParam: 1,
     getNextPageParam: ({ meta }) => {
       return meta.hasNextPage ? meta.offset + meta.limit : undefined;
     },
+    staleTime: 1000 * 60 * 5,
   });
 
   return {
     query,
+    searchText,
     setSortBy,
+    setSearchText: (value: string) => {
+      setSearchText(value);
+      $params.set({ ...$params.get(), searchText: value });
+    },
   };
 };
 

@@ -1,9 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Home, Attributes } from './pages';
-
-const Placeholder = () => {
-  return <div>Placeholder</div>;
-};
+import { Home, Attributes, Attribute } from './pages';
 
 function App() {
   return (
@@ -11,7 +7,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/attributes" element={<Attributes />} />
-        <Route path="/attributes/:id" element={<Placeholder />} />
+        <Route path="/attributes/:id" element={<Attribute />} />
       </Routes>
     </Router>
   );

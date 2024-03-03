@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { clearParams } from '../store';
 import TopBar from './TopBar';
 
 type Props = {
@@ -6,6 +9,14 @@ type Props = {
 };
 
 const Layout: React.FC<Props> = ({ children }) => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (!pathname.includes('attributes')) {
+      clearParams();
+    }
+  }, [pathname]);
+
   return (
     <>
       <Helmet
