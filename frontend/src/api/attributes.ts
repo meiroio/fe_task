@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 import type { Attribute } from '@meiro/backend/src/attributes/data';
-import type { GetAttributeParams } from '../types';
+import type { GetAttributeParams, PageData } from '../types';
 
 export const fetchAttributes = async (params: GetAttributeParams) => {
   try {
-    const res = await axios.get<{
-      data: Attribute[];
-      meta: GetAttributeParams & { hasNextPage: boolean };
-    }>('http://127.0.0.1:3000/attributes', { params });
+    const res = await axios.get<PageData<Attribute[], GetAttributeParams>>(
+      'http://127.0.0.1:3000/attributes',
+      { params },
+    );
 
     return res.data;
   } catch (error) {

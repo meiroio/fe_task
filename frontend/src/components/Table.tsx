@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { useLabels } from '../hooks';
+import { formatDate } from '../utils';
 
 import type { GetAttributeParams } from '../types';
 import type { Attribute } from '@meiro/backend/src/attributes/data';
@@ -21,7 +23,7 @@ const columns = [
   },
   {
     name: 'labels',
-    label: 'Label',
+    label: 'Labels',
   },
   {
     name: 'createdAt',
@@ -40,6 +42,8 @@ const Table: React.FC<Props> = ({
   isFetching = false,
   setSortBy,
 }) => {
+  const { data: labels } = useLabels();
+
   return (
     <table className="min-w-full text-gray-900">
       <thead className="border-b ">
@@ -50,7 +54,7 @@ const Table: React.FC<Props> = ({
               <th
                 key={`th-${name}`}
                 scope="col"
-                className="sticky top-0 cursor-pointer bg-white/80 px-6 py-4 text-left text-sm font-medium"
+                className="sticky top-0 cursor-pointer bg-white/80 px-4 py-4 text-left text-sm font-semibold"
                 onClick={() =>
                   name === 'name' || name === 'createdAt'
                     ? setSortBy && setSortBy(name)
@@ -75,11 +79,11 @@ const Table: React.FC<Props> = ({
             >
               <Link to={`/attributes/${id}`}>{name}</Link>
             </th>
-            <td className="whitespace-nowrap px-4 py-2 text-sm ">
-              {labelIds.join(', ')}
+            <td className="whitespace-nowrap px-4 py-2 text-sm">
+              {labelIds.map((labelId) => labels?.[labelId]).join(', ')}
             </td>
             <td className="whitespace-nowrap px-4 py-2 text-sm ">
-              {createdAt}
+              {formatDate(createdAt)}
             </td>
             {action && (
               <td className="whitespace-nowrap px-4 py-2 text-sm ">

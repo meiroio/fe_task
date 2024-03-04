@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { Layout, Modal } from '../components';
-import { useAttribute } from '../hooks';
+import { useAttribute, useLabels } from '../hooks';
 import { deleteAttribute } from '../api';
 
 const Attribute = () => {
@@ -11,6 +11,7 @@ const Attribute = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data, isFetching } = useAttribute();
+  const { data: labels } = useLabels();
 
   if (isFetching) {
     return <Layout>Loading...</Layout>;
@@ -52,6 +53,9 @@ const Attribute = () => {
     <Layout>
       <div className="flex w-full flex-col items-center justify-center pt-8">
         <h1 className="text-3xl font-bold">{data.name}</h1>
+        <div className="pt-4">
+          {data.labelIds.map((id) => labels?.[id]).join(', ')}
+        </div>
         <div className="flex gap-2 pt-8">
           <Link to="/attributes" className="btn-muted">
             Back

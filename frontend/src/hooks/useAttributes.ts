@@ -33,10 +33,7 @@ const useAttributes = () => {
     select: (data) => data.pages.flatMap((page) => page.data),
     initialPageParam: 0,
     getNextPageParam: ({ meta }) => {
-      return meta.hasNextPage ? meta.offset + 1 : undefined;
-    },
-    getPreviousPageParam: ({ meta }) => {
-      return meta.offset > 0 ? meta.offset - 1 : undefined;
+      return meta.hasNextPage ? meta.offset + meta.limit : undefined;
     },
     staleTime: 1000 * 60 * 5,
   });
