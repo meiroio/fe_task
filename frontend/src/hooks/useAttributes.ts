@@ -28,10 +28,15 @@ const useAttributes = () => {
 
   const query = useInfiniteQuery({
     queryKey: ['attributes', params, useDebounce(searchText)],
-    queryFn: () => fetchAttributes({ ...params, searchText }),
-    initialPageParam: 1,
+    queryFn: ({ pageParam }) =>
+      fetchAttributes({ ...params, searchText, offset: pageParam }),
+    select: (data) => data.pages.flatMap((page) => page.data),
+    initialPageParam: 0,
     getNextPageParam: ({ meta }) => {
-      return meta.hasNextPage ? meta.offset + meta.limit : undefined;
+      return meta.hasNextPage ? meta.offset + 1 : undefined;
+    },
+    getPreviousPageParam: ({ meta }) => {
+      return meta.offset > 0 ? meta.offset - 1 : undefined;
     },
     staleTime: 1000 * 60 * 5,
   });

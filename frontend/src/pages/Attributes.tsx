@@ -1,9 +1,19 @@
+import { useEffect } from 'react';
+import { useIntersectionObserver } from 'usehooks-ts';
 import { Layout, Table } from '../components';
 import { useAttributes } from '../hooks';
 
 const Attributes = () => {
   const { query, searchText, setSortBy, setSearchText } = useAttributes();
-  const { data, isFetching } = query;
+  const observerBottom = useIntersectionObserver({});
+
+  const { data, isFetching, hasNextPage, fetchNextPage } = query;
+
+  useEffect(() => {
+    if (observerBottom.isIntersecting && hasNextPage) {
+      !isFetching && fetchNextPage();
+    }
+  }, [observerBottom, hasNextPage, isFetching, fetchNextPage]);
 
   const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -19,13 +29,15 @@ const Attributes = () => {
         value={searchText}
         onChange={handleSearchText}
       />
-      {/* just show first page for now */}
-      <Table
-        data={data?.pages[0].data}
-        action={{ onClick: () => {}, label: 'Delete' }}
-        isFetching={isFetching}
-        setSortBy={setSortBy}
-      />
+      <div className="h-80 overflow-y-scroll">
+        <Table
+          fwdRef={observerBottom.ref}
+          data={data}
+          action={{ onClick: () => {}, label: 'Delete' }}
+          isFetching={isFetching}
+          setSortBy={setSortBy}
+        />
+      </div>
     </Layout>
   );
 };

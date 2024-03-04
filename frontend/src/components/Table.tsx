@@ -9,6 +9,7 @@ type Props = {
     onClick: (id: Attribute['id']) => void;
     label: string;
   };
+  fwdRef?: React.Ref<HTMLTableRowElement>;
   isFetching?: boolean;
   setSortBy?: (sortBy: GetAttributeParams['sortBy']) => void;
 };
@@ -35,13 +36,10 @@ const columns = [
 const Table: React.FC<Props> = ({
   data = [],
   action,
+  fwdRef,
   isFetching = false,
   setSortBy,
 }) => {
-  if (isFetching) {
-    return <div className="py-8 text-center">Loading...</div>;
-  }
-
   return (
     <table className="min-w-full text-gray-900">
       <thead className="border-b ">
@@ -52,7 +50,7 @@ const Table: React.FC<Props> = ({
               <th
                 key={`th-${name}`}
                 scope="col"
-                className="cursor-pointer px-6 py-4 text-left text-sm font-medium"
+                className="sticky top-0 cursor-pointer bg-white/80 px-6 py-4 text-left text-sm font-medium"
                 onClick={() =>
                   name === 'name' || name === 'createdAt'
                     ? setSortBy && setSortBy(name)
@@ -66,7 +64,11 @@ const Table: React.FC<Props> = ({
       </thead>
       <tbody>
         {data.map(({ id, name, labelIds, createdAt }, index) => (
-          <tr key={`tr-${index}`} className="border-t">
+          <tr
+            key={`tr-${index}`}
+            className="border-t"
+            ref={index === data.length - 3 && !isFetching ? fwdRef : undefined}
+          >
             <th
               scope="row"
               className="whitespace-nowrap px-6 py-4 text-left text-sm font-semibold"
