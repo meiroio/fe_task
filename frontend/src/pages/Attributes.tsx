@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useIntersectionObserver } from 'usehooks-ts';
 import { deleteAttribute } from '../api';
-import { Layout, Modal, Table } from '../components';
+import { Input, Layout, Modal, Table } from '../components';
 import { useAttributes } from '../hooks';
 
 const Attributes = () => {
@@ -19,6 +19,7 @@ const Attributes = () => {
   }, [observerBottom, hasNextPage, isFetching, fetchNextPage]);
 
   const handleSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
     setSearchText(e.target.value);
   };
 
@@ -42,13 +43,12 @@ const Attributes = () => {
 
   return (
     <Layout>
-      <label htmlFor="attribute">Search: </label>
-      <input
+      <Input
         name="attribute"
-        type="text"
         placeholder="Search"
         value={searchText}
         onChange={handleSearchText}
+        className="w-64 py-4"
       />
       <div className="h-80 overflow-y-scroll">
         <Table
