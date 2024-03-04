@@ -71,21 +71,21 @@ const Table: React.FC<Props> = ({
           >
             <th
               scope="row"
-              className="whitespace-nowrap px-6 py-4 text-left text-sm font-semibold"
+              className="whitespace-nowrap px-4 py-2 text-left text-sm font-semibold"
             >
               <Link to={`/attributes/${id}`}>{name}</Link>
             </th>
-            <td className="whitespace-nowrap px-6 py-4 text-sm ">
+            <td className="whitespace-nowrap px-4 py-2 text-sm ">
               {labelIds.join(', ')}
             </td>
-            <td className="whitespace-nowrap px-6 py-4 text-sm ">
+            <td className="whitespace-nowrap px-4 py-2 text-sm ">
               {createdAt}
             </td>
             {action && (
-              <td className="whitespace-nowrap px-6 py-4 text-sm ">
+              <td className="whitespace-nowrap px-4 py-2 text-sm ">
                 <button
                   onClick={() => action.onClick(id)}
-                  className="text-red-500"
+                  className="btn-danger-muted"
                 >
                   {action.label}
                 </button>

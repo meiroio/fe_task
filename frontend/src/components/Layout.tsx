@@ -25,6 +25,7 @@ const Layout: React.FC<Props> = ({ children }) => {
         htmlAttributes={{ lang: 'en' }}
       >
         <meta name="description" content="Meiro frontend task" />
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </Helmet>
       <TopBar />
       <div className="mx-auto max-w-6xl rounded-2xl px-3 sm:px-6">
