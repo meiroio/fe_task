@@ -9,6 +9,7 @@ const useAttribute = () => {
   const query = useQuery({
     queryKey: ['attribute', id],
     queryFn: () => fetchAttribute(id),
+    select: ({ data }) => data,
     enabled: id !== '',
     retry: false, // TODO: later enable this for error codes other 404 and max. 3 retries
   });

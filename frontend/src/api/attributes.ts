@@ -18,7 +18,7 @@ export const fetchAttributes = async (params: GetAttributeParams) => {
 
 export const fetchAttribute = async (id: Attribute['id']) => {
   try {
-    const res = await axios.get<Attribute>(
+    const res = await axios.get<{ data: Attribute }>(
       `http://127.0.0.1:3000/attributes/${id}`,
     );
 
