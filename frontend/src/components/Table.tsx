@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLabels } from '../hooks';
-import { formatDate } from '../utils';
+import { formatDate, getBadgeColor } from '../utils';
+import { MISSING_TEXT } from '../constants';
 
 import type { GetAttributeParams } from '../types';
 import type { Attribute } from '@meiro/backend/src/attributes/data';
@@ -80,13 +81,22 @@ const Table: React.FC<Props> = ({
               <Link to={`/attributes/${id}`}>{name}</Link>
             </th>
             <td className="whitespace-nowrap px-4 py-2 text-sm">
-              {labelIds.map((labelId) => labels?.[labelId]).join(', ')}
+              <div className="flex flex-wrap gap-2">
+                {labelIds.map((labelId) => (
+                  <span
+                    key={`label-${id}-${labelId}`}
+                    className={`badge ${getBadgeColor(+labelId)}`}
+                  >
+                    {labels?.[labelId] ?? MISSING_TEXT}
+                  </span>
+                ))}
+              </div>
             </td>
-            <td className="whitespace-nowrap px-4 py-2 text-sm ">
+            <td className="whitespace-nowrap px-4 py-2 text-sm">
               {formatDate(createdAt)}
             </td>
             {action && (
-              <td className="whitespace-nowrap px-4 py-2 text-sm ">
+              <td className="whitespace-nowrap px-4 py-2 text-sm">
                 <button
                   onClick={() => action.onClick(id)}
                   className="btn-danger-muted"

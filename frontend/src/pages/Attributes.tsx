@@ -66,7 +66,7 @@ const Attributes = () => {
           onConfirm={() => handleDelete(attributeId)}
         >
           <p>
-            {`Are you sure you want to delete attribute with id=${attributeId}?`}
+            {`Are you sure you want to delete attribute id=${attributeId}?`}
           </p>
         </Modal>
       )}

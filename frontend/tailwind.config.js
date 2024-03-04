@@ -4,6 +4,16 @@ import tailwindcssForms from '@tailwindcss/forms';
 
 export default {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  safelist: [
+    'badge-gray',
+    'badge-red',
+    'badge-yellow',
+    'badge-green',
+    'badge-blue',
+    'badge-indigo',
+    'badge-purple',
+    'badge-pink',
+  ],
   theme: {
     extend: {
       fontFamily: {

@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Layout, Modal } from '../components';
 import { useAttribute, useLabels } from '../hooks';
 import { deleteAttribute } from '../api';
+import { MISSING_TEXT } from '../constants';
 
 const Attribute = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +55,7 @@ const Attribute = () => {
       <div className="flex w-full flex-col items-center justify-center pt-8">
         <h1 className="text-3xl font-bold">{data.name}</h1>
         <div className="pt-4">
-          {data.labelIds.map((id) => labels?.[id]).join(', ')}
+          {data.labelIds.map((id) => labels?.[id] ?? MISSING_TEXT).join(', ')}
         </div>
         <div className="flex gap-2 pt-8">
           <Link to="/attributes" className="btn-muted">
@@ -71,9 +72,7 @@ const Attribute = () => {
           onClose={toggleModal}
           onConfirm={() => handleDelete(data.id)}
         >
-          <p>
-            {`Are you sure you want to delete attribute with id=${data.id}?`}
-          </p>
+          <p>{`Are you sure you want to delete attribute id=${data.id}?`}</p>
         </Modal>
       )}
       <Toaster />
