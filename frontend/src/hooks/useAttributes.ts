@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useDebounce } from './useDebounce';
+import { useDebounceValue } from 'usehooks-ts';
 import { fetchAttributes } from '../api';
 
 import type { GetAttributeParams } from '../types';
@@ -27,7 +27,7 @@ const useAttributes = () => {
   };
 
   const query = useInfiniteQuery({
-    queryKey: ['attributes', params, useDebounce(searchText)],
+    queryKey: ['attributes', params, useDebounceValue(searchText, 500)],
     queryFn: ({ pageParam }) =>
       fetchAttributes({ ...params, searchText, offset: pageParam }),
     select: (data) => data.pages.flatMap((page) => page.data),
