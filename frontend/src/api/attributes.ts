@@ -3,10 +3,12 @@ import axios from 'axios';
 import type { Attribute } from '@meiro/backend/src/attributes/data';
 import type { GetAttributeParams, PageData } from '../types';
 
+const apiUrl = `${import.meta.env.VITE_API_URL}:${import.meta.env.VITE_API_PORT}`;
+
 export const fetchAttributes = async (params: GetAttributeParams) => {
   try {
     const res = await axios.get<PageData<Attribute[], GetAttributeParams>>(
-      'http://127.0.0.1:3000/attributes',
+      `${apiUrl}/attributes`,
       { params },
     );
 
@@ -19,7 +21,7 @@ export const fetchAttributes = async (params: GetAttributeParams) => {
 export const fetchAttribute = async (id: Attribute['id']) => {
   try {
     const res = await axios.get<{ data: Attribute }>(
-      `http://127.0.0.1:3000/attributes/${id}`,
+      `${apiUrl}/attributes/${id}`,
     );
 
     return res.data;
@@ -34,7 +36,7 @@ export const deleteAttribute = async (id: Attribute['id']) => {
 
   try {
     const res = await axios.delete<Attribute['id']>(
-      `http://127.0.0.1:3000/attributes/${id}`,
+      `${apiUrl}/attributes/${id}`,
     );
 
     return res.data;

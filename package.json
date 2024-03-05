@@ -6,7 +6,8 @@
     "backend"
   ],
   "scripts": {
-    "dev": "yarn workspace @meiro/frontend vite"
+    "dev": "yarn workspace @meiro/frontend vite",
+    "dev:be": "yarn workspace @meiro/backend start"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.1.0",
