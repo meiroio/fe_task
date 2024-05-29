@@ -1,0 +1,1 @@
+export const LABELS_FILTER_LIMIT_DEFAULT = 10;
